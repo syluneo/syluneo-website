@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syluneo - Your Self-Guided Mental Wellness Space</title>
+    <style>
+        :root {
+            --bg-color: #0d0b18;
+            --card-bg: #161224;
+            --text-color: #e2e1e6;
+            --text-muted: #a3a0ad;
+            --accent: #9d80f2;
+            --accent-gradient: linear-gradient(135deg, #8a63f7, #5330b8);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        h1 span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(138, 99, 247, 0.3);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(138, 99, 247, 0.5);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            box-shadow: none;
+        }
+        .btn-outline:hover {
+            background: rgba(157, 128, 242, 0.1);
+            color: white;
+            box-shadow: none;
+        }
+        .features {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .feature-card {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: left;
+        }
+        .feature-card h3 {
+            font-size: 20px;
+            margin-top: 0;
+            color: white;
+        }
+        .feature-card p {
+            color: var(--text-muted);
+            margin-bottom: 0;
+        }
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 100px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .footer-links {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="/" class="logo">🌙 <span>Syluneo</span></a>
+    </header>
+
+    <section class="hero">
+        <h1>Find Your Inner Peace with <span>Syluneo</span></h1>
+        <p>A beautiful, self-guided mental wellness app designed to help you track your mood, reflect on CBT-style journals, complete daily healthy habits, and meditate to calm audio.</p>
+        <div class="cta-buttons">
+            <a href="#" class="btn">Download on App Store</a>
+            <a href="#" class="btn btn-outline">Get it on Google Play</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature-card">
+            <h3>📝 CBT-Style Journaling</h3>
+            <p>Reflect securely on private prompts designed by therapeutic experts to clear mental clutter and ease anxiety.</p>
+        </div>
+        <div class="feature-card">
+            <h3>📊 Mood & Trend Analytics</h3>
+            <p>Log your daily emotional states and visualize patterns over time to understand your mind better.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🎧 Calm Guided Audio</h3>
+            <p>Unwind at the end of the day with breathing exercises and soothing ambient soundscapes built right in.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Syluneo. All rights reserved. Self-guided wellness, not medical advice.</p>
+        <div class="footer-links">
+            <a href="/privacy-policy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms and Conditions</a>
+            <a href="mailto:support@syluneo.com">Contact Support</a>
+        </div>
+    </footer>
+
+</body>
+</html>
