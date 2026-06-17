@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10-Day Calm Mind Course - Syluneo</title>
+    <style>
+        :root {
+            --bg-color: #0d0b18;
+            --card-bg: #161224;
+            --card-bg-hover: #1f1a33;
+            --text-color: #e2e1e6;
+            --text-muted: #a3a0ad;
+            --accent: #9d80f2;
+            --accent-gradient: linear-gradient(135deg, #8a63f7, #5330b8);
+            --glow: 0 0 20px rgba(138, 99, 247, 0.3);
+            --success: #3cd070;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 120px; /* Space for the floating bottom player */
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-home {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-home:hover {
+            color: var(--accent);
+        }
+
+        /* Course Intro Container */
+        .course-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .course-header {
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            background: rgba(157, 128, 242, 0.1);
+            color: var(--accent);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .course-desc {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        /* Progress Bar (BetterMe Style) */
+        .progress-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 35px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .progress-outer {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-inner {
+            height: 100%;
+            width: 10%; /* Day 1 done = 10% */
+            background: var(--accent-gradient);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Timeline of Days */
+        .days-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .day-card {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s, background-color 0.2s, border-color 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Unlocked Day Styles */
+        .day-card.unlocked:hover {
+            transform: translateY(-2px);
+            background-color: var(--card-bg-hover);
+            border-color: rgba(157, 128, 242, 0.3);
+        }
+
+        .day-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .day-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(157, 128, 242, 0.1);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .day-card.unlocked .day-number {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: var(--glow);
+        }
+
+        .day-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .day-duration {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Locked Day Styles */
+        .day-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .action-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .unlocked .action-icon {
+            background: rgba(157, 128, 242, 0.2);
+            color: var(--accent);
+        }
+
+        /* Slide-Up Bottom Audio Player Drawer (BetterMe Style) */
+        .bottom-player {
+            position: fixed;
+            bottom: -150px; /* Hidden by default */
+            left: 0;
+            right: 0;
+            background: #110d21;
+            border-top: 1px solid rgba(157, 128, 242, 0.2);
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .bottom-player.active {
+            bottom: 0;
+        }
+
+        .player-track-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 30%;
+        }
+
+        /* Pulsing breathing indicator next to playing text */
+        .playing-indicator {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .indicator-pulse {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            opacity: 0;
+        }
+
+        .bottom-player.playing .indicator-pulse {
+            animation: pulseWave 2.5s infinite;
+        }
+
+        @keyframes pulseWave {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+
+        .track-text h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .track-text p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Center Controls */
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 40%;
+        }
+
+        .control-btns {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .play-pause-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            color: #110d21;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: none;
+        }
+
+        .play-pause-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .play-pause-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* Seek Bar Container */
+        .seek-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 12px;
+        }
+
+        .time-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            min-width: 35px;
+        }
+
+        .progress-slider-container {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-slider-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        /* Right close/complete area */
+        .player-actions {
+            width: 30%;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn-complete {
+            background: var(--success);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-complete:hover {
+            transform: translateY(-2px);
+        }
+
+        .close-player {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .bottom-player {
+                flex-direction: column;
+                bottom: -220px;
+                gap: 15px;
+                padding: 15px;
+            }
+            .player-track-info, .player-controls, .player-actions {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+            }
+            .player-actions {
+                justify-content: space-between;
+                border-top: 1px solid rgba(255,255,255,0.05);
+                padding-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">🌙 <span>Syluneo</span></a>
+        <a href="index.html" class="back-home">← Back to Website</a>
+    </header>
+
+    <div class="course-container">
+        
+        <div class="course-header">
+            <span class="badge">10-Day Wellness Blueprint</span>
+            <h1>Calm Mind Meditation</h1>
+            <p class="course-desc">A step-by-step audio-guided mindfulness routine designed to ground your daily anxiety and cultivate long-lasting inner peace.</p>
+            
+            <!-- Progress Bar Card -->
+            <div class="progress-card">
+                <div class="progress-info">
+                    <span>Course Progress</span>
+                    <span id="progress-text">1 of 10 Days Unlocked</span>
+                </div>
+                <div class="progress-outer">
+                    <div class="progress-inner" id="progress-bar-percentage"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10-Day Timeline List -->
+        <div class="days-list">
+            
+            <!-- DAY 1: UNLOCKED & CONNECTED -->
+            <div class="day-card unlocked" id="day1-card" onclick="openPlayer()">
+                <div class="day-info">
+                    <div class="day-number">1</div>
+                    <div>
+                        <div class="day-title">Finding Your Inner Calm</div>
+                        <div class="day-duration">
+                            <span>🎧 Guided Audio</span> • <span>5 mins</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-icon">
+                    <!-- Play icon -->
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+            </div>
+
+            <!-- DAY 2: PLACEHOLDER (LOCKED) -->
+            <div class="day-card locked">
+                <div class="day-info">
+                    <div class="day-number">2</div>
+                    <div>
+                        <div class="day-title">Deep Breathing Mechanics</div>
+                        <div class="day-duration">Locked • Coming Soon</div>
+                    </div>
+                </div>
+                <div class="action-icon">
+                    <!-- Lock Icon -->
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                </div>
+            </div>
+
+            <!-- DAY 3: PLACEHOLDER (LOCKED) -->
+            <div class="day-card locked">
+                <div class="day-info">
+                    <div class="day-number">3</div>
+                    <div>
+                        <div class="day-title">Grounding Racing Thoughts</div>
+                        <div class="day-duration">Locked • Coming Soon</div>
+                    </div>
+                </div>
+                <div class="action-icon">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                </div>
+            </div>
+
+            <!-- DAY 4: PLACEHOLDER (LOCKED) -->
+            <div class="day-card locked">
+                <div class="day-info">
+                    <div class="day-number">4</div>
+                    <div>
+                        <div class="day-title">Silent Mindfulness Gaps</div>
+                        <div class="day-duration">Locked • Coming Soon</div>
+                    </div>
+                </div>
+                <div class="action-icon">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                </div>
+            </div>
+
+            <!-- DAY 5-10 PLACEHOLDERS -->
+            <!-- DAY 5 -->
+            <div class="day-card locked">
+                <div class="day-info">
+                    <div class="day-number">5</div>
+                    <div>
+                        <div class="day-title">Releasing Muscle Tension</div>
+                        <div class="day-duration">Locked • Coming Soon</div>
+                    </div>
+                </div>
+                <div class="action-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+            </div>
+
+            <!-- DAY 6 -->
+            <div class="day-card locked">
+                <div class="day-info">
+                    <div class="day-number">6</div>
+                    <div>
+                        <div class="day-title">Acceptance & Letting Go</div>
+                        <div class="day-duration">Locked • Coming Soon</div>
+                    </div>
+                </div>
+                <div class="action-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+            </div>
+
+            <!-- DAY 7 -->
+            <div class="day-card locked">
+                <div class="day-info">
+                    <div class="day-number">7</div>
+                    <div>
+                        <div class="day-title">Managing Anxiety Spikes</div>
+                        <div class="day-duration">Locked • Coming Soon</div>
+                    </div>
+                </div>
+                <div class="action-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+            </div>
+
+            <!-- DAY 8 -->
+            <div class="day-card locked">
+                <div class="day-info">
+                    <div class="day-number">8</div>
+                    <div>
+                        <div class="day-title">The Power of Soft Focus</div>
+                        <div class="day-duration">Locked • Coming Soon</div>
+                    </div>
+                </div>
+                <div class="action-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+            </div>
+
+            <!-- DAY 9 -->
+            <div class="day-card locked">
+                <div class="day-info">
+                    <div class="day-number">9</div>
+                    <div>
+                        <div class="day-title">Calming Body Scanning</div>
+                        <div class="day-duration">Locked • Coming Soon</div>
+                    </div>
+                </div>
+                <div class="action-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+            </div>
+
+            <!-- DAY 10 -->
+            <div class="day-card locked">
+                <div class="day-info">
+                    <div class="day-number">10</div>
+                    <div>
+                        <div class="day-title">Carrying Quiet Forward</div>
+                        <div class="day-duration">Locked • Coming Soon</div>
+                    </div>
+                </div>
+                <div class="action-icon"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PERSISTENT SLIDE-UP PLAYER DRAWER (BetterMe Style) -->
+    <div class="bottom-player" id="audio-drawer">
+        <!-- Track Visual Info -->
+        <div class="player-track-info">
+            <div class="playing-indicator">
+                <div class="indicator-pulse"></div>
+                <span>🌸</span>
+            </div>
+            <div class="track-text">
+                <h4>Day 1: Finding Your Inner Calm</h4>
+                <p>Course Meditation • Voice Session</p>
+            </div>
+        </div>
+
+        <!-- Center Play Controls & Progress Bar -->
+        <div class="player-controls">
+            <div class="control-btns">
+                <button class="play-pause-btn" id="play-pause-btn">
+                    <!-- Play icon -->
+                    <svg id="p-play-svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <!-- Pause icon -->
+                    <svg id="p-pause-svg" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+            </div>
+            <div class="seek-container">
+                <span class="time-label" id="current-time">0:00</span>
+                <div class="progress-slider-container" id="slider-container">
+                    <div class="progress-slider-fill" id="slider-fill"></div>
+                </div>
+                <span class="time-label" id="duration">0:00</span>
+            </div>
+        </div>
+
+        <!-- Right Side Player Dismiss / Action -->
+        <div class="player-actions">
+            <button class="btn-complete" id="mark-complete-btn" onclick="completeDayOne()">Complete Session</button>
+            <button class="close-player" onclick="closePlayer()">×</button>
+        </div>
+    </div>
+
+    <!-- Hidden Native Audio Source -->
+    <audio id="audio-element" src="https://syluneo.com/audio/day1voice.mp3" preload="metadata"></audio>
+
+    <script>
+        const audio = document.getElementById('audio-element');
+        const drawer = document.getElementById('audio-drawer');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const playSvg = document.getElementById('p-play-svg');
+        const pauseSvg = document.getElementById('p-pause-svg');
+        const sliderFill = document.getElementById('slider-fill');
+        const sliderContainer = document.getElementById('slider-container');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
+
+        // Opening and Triggering play
+        function openPlayer() {
+            drawer.classList.add('active');
+            togglePlay(true); // Auto-play when they click the card
+        }
+
+        function closePlayer() {
+            audio.pause();
+            drawer.classList.remove('active');
+            drawer.classList.remove('playing');
+            playSvg.style.display = 'block';
+            pauseSvg.style.display = 'none';
+        }
+
+        // Toggle Audio Play/Pause
+        function togglePlay(forcePlay = false) {
+            if (audio.paused || forcePlay) {
+                audio.play().then(() => {
+                    playSvg.style.display = 'none';
+                    pauseSvg.style.display = 'block';
+                    drawer.classList.add('playing');
+                }).catch(err => {
+                    console.warn("Autoplay blocked. Tap the play button manually.", err);
+                });
+            } else {
+                audio.pause();
+                playSvg.style.display = 'block';
+                pauseSvg.style.display = 'none';
+                drawer.classList.remove('playing');
+            }
+        }
+
+        playPauseBtn.addEventListener('click', () => togglePlay());
+
+        // Format time to MM:SS
+        function formatTime(secs) {
+            if (isNaN(secs)) return "0:00";
+            const m = Math.floor(secs / 60);
+            const s = Math.floor(secs % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        // Keep timelines updated
+        audio.addEventListener('timeupdate', () => {
+            const percent = (audio.currentTime / audio.duration) * 100;
+            sliderFill.style.width = `${percent}%`;
+            currentTimeEl.textContent = formatTime(audio.currentTime);
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            durationEl.textContent = formatTime(audio.duration);
+        });
+
+        // Safety fallback if loaded quickly
+        if (audio.readyState >= 1) {
+            durationEl.textContent = formatTime(audio.duration);
+        }
+
+        // Scrub progress slider
+        sliderContainer.addEventListener('click', (e) => {
+            const width = sliderContainer.clientWidth;
+            const clickX = e.offsetX;
+            if (audio.duration) {
+                audio.currentTime = (clickX / width) * audio.duration;
+            }
+        });
+
+        // Audio Ended
+        audio.addEventListener('ended', () => {
+            togglePlay();
+            sliderFill.style.width = '0%';
+            currentTimeEl.textContent = '0:00';
+            completeDayOne();
+        });
+
+        // Track completion dynamically (Updates Progress bar to 100% finished!)
+        function completeDayOne() {
+            document.getElementById('progress-bar-percentage').style.width = "100%";
+            document.getElementById('progress-text').textContent = "Course Completed! (100% Complete)";
+            document.getElementById('mark-complete-btn').textContent = "✓ Completed";
+            document.getElementById('mark-complete-btn').style.background = "#555";
+            alert("Congratulations on completing your Day 1 Meditation session! 🌸 You are on your way to building a calmer mind.");
+        }
+    </script>
+</body>
+</html>
