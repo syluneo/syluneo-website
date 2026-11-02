@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /tests/
+Disallow: /README.txt
+
+Sitemap: https://syluneo.com/sitemap.xml
