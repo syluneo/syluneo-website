@@ -20,6 +20,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="fonts.css">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style>
+<script data-goatcounter="https://syluneo.goatcounter.com/count" data-goatcounter-settings='{"no_onload": true}' src="/assets/count.js"></script>
 </head>
 <body>
 <style>
@@ -1113,13 +1114,14 @@ main:focus{outline:none}
     <div class="card">
       <ul class="plain">
         <li><b>No account, no sign-up.</b> There is no login and nothing to register.</li>
-        <li><b>Your calculations happen in your browser.</b> Quiz answers and every number you type into a tool are worked out on your device. The page has no code that sends them anywhere: no server, database, analytics, cookies or tracking.</li>
+        <li><b>Your calculations happen in your browser.</b> Quiz answers and every number you type into a tool are worked out on your device. The page has no code that sends them anywhere, and there are no cookies.</li>
+        <li><b>Visits are counted, anonymously.</b> On syluneo.com, a privacy-friendly counter (GoatCounter) records which screens are opened, for example “No-cost EMI check”, how many quizzes are finished and which money types come up, as totals only. It never receives your answers or any number you type, uses no cookies and does not store your IP address.</li>
         <li><b>Nothing is stored.</b> The page doesn't save your inputs in browser storage, and money fields ask your browser not to autofill or remember them. Closing or reloading the page clears everything.</li>
         <li><b>Fonts are part of the site.</b> No outside font or image services are contacted.</li>
         <li><b>Sharing is your choice.</b> Share images and messages are made on your device and only leave it if you download, copy or share them. Tool images leave out your numbers unless you tick the box.</li>
         <li><b>Links you share contain no personal data.</b> A challenge or Face-Off link only names a personality type.</li>
       </ul>
-      <p class="fine" style="margin-top:12px">Like any website, the host that serves the page (GitHub Pages for syluneo.com) may keep standard server logs of page requests, such as IP address and browser type. Those logs never include what you type, because your inputs are never sent.</p>
+      <p class="fine" style="margin-top:12px">Like any website, the host that serves the page (GitHub Pages for syluneo.com) may keep standard server logs of page requests, such as IP address and browser type. Those logs never include what you type, because your inputs are never sent. You can read the full <a href="https://syluneo.com/privacy-policy.html">Privacy Policy</a>.</p>
     </div>
   </section>
 
@@ -1716,6 +1718,20 @@ function readHash(){
   } else fb.hidden = true;
 }
 
+/* ---------- anonymous visit counting: syluneo.com only, totals only, never inputs ---------- */
+const ONSITE = /(^|\.)syluneo\.com$/.test(location.hostname);
+const SCREEN_PATHS = {intro:'', faceoff:'faceoff', science:'science', tools:'tools', privacy:'privacy',
+  buy:'buy-check', discount:'discount-check', card:'card-trap', emi:'no-cost-emi', lifestyle:'lifestyle-inflation', infl:'inflation-check'};
+let lastCounted = null;
+function count(path, title, event){
+  try { if (ONSITE && window.goatcounter && goatcounter.count) goatcounter.count({path, title, event: !!event}); } catch (e) {}
+}
+function countScreen(id){
+  if (!(id in SCREEN_PATHS) || id === lastCounted) return;
+  lastCounted = id;
+  count('/moneybias/' + (SCREEN_PATHS[id] ? '#' + SCREEN_PATHS[id] : ''), 'MoneyBias ' + (SCREEN_PATHS[id] || 'home'));
+}
+
 /* ---------- quiz ---------- */
 let idx = 0, answers = [], times = [], qStart = 0, busy = false, turn = 0;
 function show(id){
@@ -1723,6 +1739,7 @@ function show(id){
   $('react').classList.remove('on');
   if (STAGES[id]) setStage(...STAGES[id]);
   window.scrollTo(0, 0);
+  if (id !== 'quiz' && id !== 'reveal' && id !== 'result') countScreen(id); else lastCounted = id;
 }
 $('pips').innerHTML = QUESTIONS.map(() => '<span class="pip"></span>').join('');
 $('meter').innerHTML = TYPES.map(t =>
@@ -1795,7 +1812,7 @@ document.querySelectorAll('[data-jump]').forEach(a => a.addEventListener('click'
   e.preventDefault();
   $(a.dataset.jump).scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block: 'start'});
 }));
-function startQuiz(){ idx = 0; answers = []; times = []; show('quiz'); renderQ(); }
+function startQuiz(){ idx = 0; answers = []; times = []; show('quiz'); renderQ(); count('quiz-started', 'Quiz started', true); }
 $('startBtn').addEventListener('click', () => { ac(); SFX.start(); startQuiz(); });
 $('retakeBtn').addEventListener('click', () => { SFX.start(); startQuiz(); });
 $('backBtn').addEventListener('click', () => {
@@ -1829,6 +1846,8 @@ let current = null;
 function finish(){
   const {best, second, pct, norm, ranked} = score(answers);
   current = {t: best, second, pct, norm};
+  count('quiz-completed', 'Quiz completed', true);
+  count('result-' + best.id, 'Result: ' + best.name, true);
   const f = FUN[best.k];
   setStage(best.c, best.ink);
   $('resNote').innerHTML = noteHTML(best, false, 'reveal-in');

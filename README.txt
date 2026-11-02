@@ -16,7 +16,8 @@ favicon.ico             The same icon for browsers that ask for /favicon.ico
 moneybias/fonts/        The three fonts, hosted on your own site (open licences included)
 
 The site is plain static files. There is no server code, no database and no
-tracking. The pages make no requests to any other website.
+advertising trackers. Fonts and scripts are served from syluneo.com itself.
+The only outside request is the anonymous GoatCounter visit count.
 
 The old mental-wellness site
 ----------------------------
@@ -41,17 +42,21 @@ in moneybias/index.html and the canonical/og:url lines in the pages.
 Privacy promise
 ---------------
 The pages say: "No account needed. Your calculations happen in your browser.
-We do not store your financial inputs." That is true of these files: there is
-no server code, storage, cookies, analytics or outside requests. Keep it true:
-if you add anything (analytics, chat widgets, ads, embedded videos), check that
-it never receives what people type, and update the "How privacy works" page.
+We do not store your financial inputs." That is true of these files: nothing
+anyone types is ever sent anywhere, and there are no cookies.
 
-Optional: counting visitors without collecting quiz answers
------------------------------------------------------------
-If you want a "used by X people" number for your CV, use a privacy-friendly
-page-view counter that sets no cookies (for example Plausible or
-GoatCounter). Count page views only. Never send quiz answers
-or results anywhere; the app is built so that it never does.
+Visit counting (GoatCounter)
+----------------------------
+Dashboard: https://syluneo.goatcounter.com (log in with your GoatCounter account)
+- assets/count.js is GoatCounter's open-source counting script (ISC licence),
+  hosted on syluneo.com. It sends only page/screen names, referrer, screen
+  width and browser type to syluneo.goatcounter.com/count.
+- In MoneyBias, screens are counted as /moneybias/#<tool>, and events show as
+  quiz-started, quiz-completed and result-<type>. No answers or amounts are sent.
+- To stop counting your own visits on a device, open
+  https://syluneo.com/#toggle-goatcounter once on that device.
+- If you change what is counted, update privacy-policy.html section 5 and the
+  "How privacy works" screen in moneybias/index.html.
 
 Checking the maths
 ------------------
