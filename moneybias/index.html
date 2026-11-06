@@ -392,6 +392,13 @@ ol.insights li::marker{font-weight:800}
 .landing-cats .card{display:flex;flex-direction:column;gap:8px;color:var(--ink)}
 .landing-cats h3{font-size:20px}
 .landing-cats a{color:var(--ink);font-weight:700}
+.collection{margin-top:44px}
+.collection summary{cursor:pointer;list-style:none;display:flex;flex-direction:column;gap:2px;padding:18px 22px;border:3px solid currentColor;border-radius:18px;min-height:44px}
+.collection summary::-webkit-details-marker{display:none}
+.collection summary .sect{margin:0;font:800 24px var(--display)}
+.collection summary .sect::after{content:"  ▾"}
+.collection[open] summary .sect::after{content:"  ▴"}
+.collection[open] .types{margin-top:22px}
 .refs-tag{color:var(--muted);font-size:10.5px;margin-top:4px}
 footer a{color:inherit}
 @media (max-width:560px){ .seg-col{flex-direction:column;width:100%} .seg-col label + label span{border-left:0;border-top:2px solid var(--ink)} }
@@ -590,14 +597,13 @@ main:focus{outline:none}
     <div class="card friend" id="friendBanner" hidden></div>
     <div class="hero">
       <div class="hero-text">
-        <p class="tag">Discover the psychology behind your money decisions</p>
+        <p class="tag">A 2-minute game · no finance knowledge needed</p>
         <h1>What's your money <em>bias?</em></h1>
-        <p class="lede">12 money situations every Indian has faced. Pick what you'd really do, and we'll tell you which mental shortcut runs your wallet.</p>
+        <p class="lede">12 everyday money moments. Pick what you'd really do, and find out which habit runs your wallet.</p>
         <div class="stickers">
           <span class="sticker">⏱️ 2 minutes</span>
           <span class="sticker">🙅 No sign-up</span>
           <span class="sticker">🔥 Brutal roasts</span>
-          <span class="sticker">🔊 Sound optional</span>
         </div>
         <div class="cta-row">
           <button class="btn primary big" id="startBtn" type="button">Let's play →</button>
@@ -610,16 +616,17 @@ main:focus{outline:none}
         <div id="heroNote"></div>
       </div>
     </div>
-    <h2 class="sect">Six free money tools 🧰</h2>
-    <p class="sect-sub">Quick checks for the moment a money decision happens. Your calculations stay in your browser.</p>
+    <h2 class="sect">Got a money question? 🧰</h2>
+    <p class="sect-sub">Six free tools. Type in a price or an amount, get a clear answer.</p>
     <div class="landing-cats">
-      <div class="card"><h3>🛍️ Spending smarter</h3><a href="#buy-check" data-route="buy-check">🛒 Should I buy this?</a><a href="#discount-check" data-route="discount-check">🏷️ Real discount checker</a></div>
-      <div class="card"><h3>🧯 Avoiding debt traps</h3><a href="#card-trap" data-route="card-trap">💳 Credit card trap calculator</a><a href="#no-cost-emi" data-route="no-cost-emi">📆 No-cost EMI check</a></div>
-      <div class="card"><h3>🌱 Growing your money habits</h3><a href="#lifestyle-inflation" data-route="lifestyle-inflation">📈 Lifestyle inflation trap</a><a href="#inflation-check" data-route="inflation-check">🎈 Inflation reality check</a></div>
+      <div class="card"><h3>🛍️ Spending smarter</h3><a href="#buy-check" data-route="buy-check">🛒 Should I buy this?</a><a href="#discount-check" data-route="discount-check">🏷️ Is this sale really a deal?</a></div>
+      <div class="card"><h3>🧯 Avoiding debt traps</h3><a href="#card-trap" data-route="card-trap">💳 Paying only part of my card bill?</a><a href="#no-cost-emi" data-route="no-cost-emi">📆 Is “no-cost EMI” free?</a></div>
+      <div class="card"><h3>🌱 Growing your money habits</h3><a href="#lifestyle-inflation" data-route="lifestyle-inflation">📈 Where did my pay rise go?</a><a href="#inflation-check" data-route="inflation-check">🎈 What will ₹1 lakh buy later?</a></div>
     </div>
-    <h2 class="sect">The collection: which one are you?</h2>
-    <p class="sect-sub">Six money personalities, each printed in the colour of a rupee note.</p>
-    <div class="types" id="typeGrid"></div>
+    <details class="collection">
+      <summary><span class="sect">Peek at the 6 money types</span><span class="sect-sub">Tap to open, or play to find yours</span></summary>
+      <div class="types" id="typeGrid"></div>
+    </details>
   </section>
 
   <!-- QUIZ -->
@@ -2279,11 +2286,11 @@ $('introFaceoffBtn').addEventListener('click', () => go('faceoff'));
 
 /* ---------- Toolkit: catalogue, personality links and shared UI ---------- */
 const TOOLS = {
-  buy:       {route:'buy-check',           screen:'buy',       emoji:'🛒', name:'Should I buy this?',          line:'A one-minute pause before you spend.',         learn:'What it costs in days of your money, and what might be pushing you.', c:'#E2A824', ink:'#2A2008', tagline:'Pause before you purchase.'},
-  discount:  {route:'discount-check',      screen:'discount',  emoji:'🏷️', name:'Real discount checker',       line:'Is that "% off" actually a good deal?',         learn:'The full price you\'d pay, compared with other prices you\'ve seen.', c:'#6C5DA6', ink:'#FFFFFF', tagline:'A big discount isn\'t always a good deal.'},
-  card:      {route:'card-trap',           screen:'card',      emoji:'💳', name:'Credit card trap calculator', line:'What paying only the minimum due could cost.', learn:'How long a balance could take to clear, and the interest along the way.', c:'#A8306F', ink:'#FFFFFF', tagline:'Minimum due isn\'t the finish line.'},
-  emi:       {route:'no-cost-emi',         screen:'emi',       emoji:'📆', name:'No-cost EMI check',           line:'Is "no-cost" EMI really no-cost?',              learn:'Bank interest, the seller\'s discount, GST and fees, side by side.', c:'#237695', ink:'#FFFFFF', tagline:'No-cost doesn\'t always mean free.'},
-  lifestyle: {route:'lifestyle-inflation', screen:'lifestyle', emoji:'📈', name:'Lifestyle inflation trap',    line:'Will your raise actually reach your savings?', learn:'How much of a pay rise higher spending could absorb.', c:'#68725F', ink:'#FFFFFF', tagline:'Your raise deserves a destination.'},
+  buy:       {route:'buy-check',           screen:'buy',       emoji:'🛒', name:'Should I buy this?',          line:'Pause before you spend.',         learn:'What it costs in days of your money, and what might be pushing you.', c:'#E2A824', ink:'#2A2008', tagline:'Pause before you purchase.'},
+  discount:  {route:'discount-check',      screen:'discount',  emoji:'🏷️', name:'Real discount checker',       line:'Is that sale price really a good deal?',         learn:'The full price you\'d pay, compared with other prices you\'ve seen.', c:'#6C5DA6', ink:'#FFFFFF', tagline:'A big discount isn\'t always a good deal.'},
+  card:      {route:'card-trap',           screen:'card',      emoji:'💳', name:'Credit card trap calculator', line:'What if you pay only part of your bill?', learn:'How long a balance could take to clear, and the interest along the way.', c:'#A8306F', ink:'#FFFFFF', tagline:'Minimum due isn\'t the finish line.'},
+  emi:       {route:'no-cost-emi',         screen:'emi',       emoji:'📆', name:'No-cost EMI check',           line:'Is "no-cost" EMI really free?',              learn:'Bank interest, the seller\'s discount, GST and fees, side by side.', c:'#237695', ink:'#FFFFFF', tagline:'No-cost doesn\'t always mean free.'},
+  lifestyle: {route:'lifestyle-inflation', screen:'lifestyle', emoji:'📈', name:'Lifestyle inflation trap',    line:'Where does your pay rise actually go?', learn:'How much of a pay rise higher spending could absorb.', c:'#68725F', ink:'#FFFFFF', tagline:'Your raise deserves a destination.'},
   inflation: {route:'inflation-check',     screen:'infl',      emoji:'🎈', name:'Inflation reality check',     line:'What your money could buy in 5, 10 or 20 years.', learn:'Future prices, and what money kept as cash could buy.', c:'#7A4F33', ink:'#FFFFFF', tagline:'Money buys less over time.'}
 };
 const TOOL_CATS = [
@@ -2367,7 +2374,7 @@ function renderLenses(){
 }
 function toolCardHTML(key, extra = ''){
   const t = TOOLS[key];
-  return `<a class="card tool-card" href="#${t.route}" data-route="${t.route}"><span class="tool-emo" aria-hidden="true">${t.emoji}</span><h3>${esc(t.name)}</h3><p>${esc(t.line)}</p><p class="learn"><b>You'll learn:</b> ${esc(t.learn)}</p>${extra}<span class="tool-go">Open the tool →</span></a>`;
+  return `<a class="card tool-card" href="#${t.route}" data-route="${t.route}"><span class="tool-emo" aria-hidden="true">${t.emoji}</span><h3>${esc(t.name)}</h3><p>${esc(t.line)}</p>${extra}<span class="tool-go">Open the tool →</span></a>`;
 }
 $('toolCats').innerHTML = TOOL_CATS.map(([name, emo, keys]) => `
   <section class="cat-group" aria-label="${esc(name)}"><h3 class="cat-title">${emo} ${esc(name)}</h3><div class="tool-grid">${keys.map(k => toolCardHTML(k)).join('')}</div></section>`).join('');
