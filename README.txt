@@ -52,7 +52,8 @@ Dashboard: https://syluneo.goatcounter.com (log in with your GoatCounter account
   hosted on syluneo.com. It sends only page/screen names, referrer, screen
   width and browser type to syluneo.goatcounter.com/count.
 - In MoneyBias, screens are counted as /moneybias/#<tool>, and events show as
-  quiz-started, quiz-completed and result-<type>. No answers or amounts are sent.
+  quiz-started, quiz-reached-q4/q8/q12, quiz-completed and result-<type>.
+  Home-page button clicks show as home-click-*. No answers or amounts are sent.
 - To stop counting your own visits on a device, open
   https://syluneo.com/#toggle-goatcounter once on that device.
 - If you change what is counted, update privacy-policy.html section 5 and the
