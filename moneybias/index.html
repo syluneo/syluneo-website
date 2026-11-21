@@ -392,6 +392,8 @@ ol.insights li::marker{font-weight:800}
 .landing-cats .card{display:flex;flex-direction:column;gap:8px;color:var(--ink)}
 .landing-cats h3{font-size:20px}
 .landing-cats a{color:var(--ink);font-weight:700}
+.example-note{margin:0 0 14px;padding:10px 14px;border:2.5px dashed var(--ink);border-radius:12px;background:#FFF6D6;color:var(--ink);font-size:15px;font-weight:600}
+.example-note[hidden]{display:none}
 .collection{margin-top:44px}
 .collection summary{cursor:pointer;list-style:none;display:flex;flex-direction:column;gap:2px;padding:18px 22px;border:3px solid currentColor;border-radius:18px;min-height:44px}
 .collection summary::-webkit-details-marker{display:none}
@@ -883,7 +885,7 @@ main:focus{outline:none}
         <div class="card stat"><span class="tag">Advertised discount</span><strong id="discAdv">–</strong><span class="fine" id="discAdvNote"></span></div>
         <div class="card stat"><span class="tag">What you'd actually pay</span><strong id="discFinal">–</strong><span class="fine" id="discFinalNote"></span></div>
         <div class="card stat"><span class="tag">Discount after charges</span><strong id="discEff">–</strong><span class="fine" id="discEffNote"></span></div>
-        <div class="card stat"><span class="tag">Vs other prices you entered</span><strong id="discVs">–</strong><span class="fine" id="discVsNote"></span></div>
+        <div class="card stat"><span class="tag">Vs other prices</span><strong id="discVs">–</strong><span class="fine" id="discVsNote"></span></div>
       </div>
       <div class="card">
         <h3>Worth remembering</h3>
@@ -2402,9 +2404,20 @@ function field(id, opts){
 // link every input to its error message for screen readers
 document.querySelectorAll('.tool-form input[id]').forEach(i => { if ($(i.id + 'Err')) i.setAttribute('aria-describedby', i.id + 'Err'); });
 const radioVal = name => { const r = document.querySelector(`input[name="${name}"]:checked`); return r ? r.value : null; };
+// Until someone changes a value, a tool shows example numbers, and its wording says so.
+const EDITED = new Set();
+const isEdited = formId => EDITED.has(formId);
 function bindLive(formId, fn){
   const f = $(formId);
-  f.addEventListener('input', fn); f.addEventListener('change', fn); f.addEventListener('submit', e => e.preventDefault());
+  const note = document.createElement('p');
+  note.className = 'example-note'; note.id = formId + 'Example';
+  note.innerHTML = '<b>Example numbers.</b> Change any of them to check your own.';
+  f.prepend(note);
+  const mark = e => { if (e && e.isTrusted && !EDITED.has(formId)) { EDITED.add(formId); note.hidden = true; } };
+  f.addEventListener('input', e => { mark(e); fn(e); });
+  f.addEventListener('change', e => { mark(e); fn(e); });
+  f.addEventListener('click', e => { if (e.target.closest('button, [role="radio"], label')) mark(e); });
+  f.addEventListener('submit', e => e.preventDefault());
 }
 function table(el, head, rows, foot){
   el.innerHTML = `<thead><tr>${head.map(h => `<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c, i) => i ? `<td>${c}</td>` : `<th scope="row">${c}</th>`).join('')}</tr>`).join('')}</tbody>${foot ? `<tfoot><tr>${foot.map((c, i) => i ? `<td>${c}</td>` : `<th scope="row">${c}</th>`).join('')}</tr></tfoot>` : ''}`;
@@ -2415,7 +2428,7 @@ function howHTML({what, formula, example, assumptions, excluded, differ}){
   const list = xs => `<ul class="plain">${xs.map(x => `<li>${x}</li>`).join('')}</ul>`;
   return `<h4>What it calculates</h4><p>${what}</p>
     <h4>Formula</h4>${list(formula)}
-    <h4>Worked example with your numbers</h4>${list(example)}
+    <h4>Worked example with the numbers above</h4>${list(example)}
     <h4>Assumptions</h4>${list(assumptions)}
     <h4>Not included</h4>${list(excluded)}
     <h4>Why your real result may differ</h4><p>${differ}</p>`;
@@ -2578,14 +2591,14 @@ function renderDisc(){
   } else { $('discEff').textContent = '–'; $('discEffNote').textContent = 'Needs a listed price above the selling price.'; }
   if (r.cheapestOther != null){
     $('discVs').textContent = r.isCheapest ? (r.vsCheapest === 0 ? 'Same price' : `${MBC.inr(-r.vsCheapest)} cheaper`) : `${MBC.inr(r.vsCheapest)} more`;
-    $('discVsNote').textContent = `Compared with the lowest other price you entered (${MBC.inr(r.cheapestOther)}).`;
+    $('discVsNote').textContent = `Compared with the lowest other price ${isEdited('discForm') ? 'you entered' : 'in this example'} (${MBC.inr(r.cheapestOther)}).`;
   } else { $('discVs').textContent = '–'; $('discVsNote').textContent = 'Add a price from another seller to compare.'; }
   let cls, head, text;
   if (r.cheapestOther == null){ cls = 'v-wait'; head = 'Add another price to compare'; text = `${r.advertised ? `The advertised ${MBC.pct(r.advertised.percent, 0)} off is measured from the seller's own listed price. ` : ''}A big discount does not automatically mean you're getting the best deal.`; }
-  else if (r.isCheapest){ cls = 'v-go'; head = '✅ Cheapest of the prices you entered'; text = 'Based only on the prices you typed in. If you need it, this looks like a competitive price.'; }
-  else { cls = 'v-stop'; head = `⚠️ Another price you found is ${MBC.inr(r.vsCheapest)} lower`; text = `Despite ${r.advertised ? `the ${MBC.pct(r.advertised.percent, 0)} "discount"` : 'the offer'}, you entered a lower all-in price elsewhere.`; }
+  else if (r.isCheapest){ cls = 'v-go'; head = isEdited('discForm') ? '✅ Cheapest of the prices you entered' : '✅ Cheapest of these example prices'; text = 'Based only on the prices above. If you need it, this looks like a competitive price.'; }
+  else { cls = 'v-stop'; head = `⚠️ Another price ${isEdited('discForm') ? 'you found' : 'in this example'} is ${MBC.inr(r.vsCheapest)} lower`; text = `Despite ${r.advertised ? `the ${MBC.pct(r.advertised.percent, 0)} "discount"` : 'the offer'}, ${isEdited('discForm') ? 'you entered' : 'this example has'} a lower all-in price elsewhere.`; }
   $('discVerdict').className = 'card verdict-card ' + cls;
-  $('discVerdict').innerHTML = `<span class="tag">Based on the prices you entered</span><p class="v-head">${esc(head)}</p><p>${esc(text)}</p>`;
+  $('discVerdict').innerHTML = `<span class="tag">${isEdited('discForm') ? 'Based on the prices you entered' : 'Based on the example prices'}</span><p class="v-head">${esc(head)}</p><p>${esc(text)}</p>`;
   $('discHow').innerHTML = howHTML({
     what:'The discount the seller advertises, the price you would actually pay including charges, the discount left after those charges, and how that compares with other prices you\'ve seen.',
     formula:['Advertised discount = listed price − selling price; % = discount ÷ listed price × 100', 'Final price = selling price + delivery or other charges', 'Discount after charges = (listed price − final price) ÷ listed price × 100', 'Comparison = final price − lowest other price you entered'],
@@ -2794,7 +2807,7 @@ function renderLife(){
   $('lifeChange').textContent = (r.savingsChange >= 0 ? '+' : '−') + MBC.inr(Math.abs(r.savingsChange)) + '/month';
   $('lifeChangeNote').textContent = `That's ${r.yearly >= 0 ? '+' : '−'}${MBC.inr(Math.abs(r.yearly))} a year.`;
   $('lifeFive').textContent = (r.fiveYear >= 0 ? '+' : '−') + MBC.inr(Math.abs(r.fiveYear));
-  $('lifeFiveNote').textContent = 'Change in monthly surplus × 60 months, under the spending you entered.';
+  $('lifeFiveNote').textContent = `Change in monthly surplus × 60 months, under the spending ${isEdited('lifeForm') ? 'you entered' : 'in this example'}.`;
   // actual savings, kept separate from the surplus
   if (r.actual){
     const g = r.actual.gapNow;
